@@ -40,7 +40,7 @@ playServicesMaps = "18.2.0"
 annotation = "1.7.1"
 
 # Project versions
-projectApplicationId = "com.plcoding.runique"
+projectApplicationId = "com.tomiappdevelopment.myactivitytracker"
 projectVersionName = "1.0"
 projectMinSdkVersion = "25"
 projectTargetSdkVersion = "34"
@@ -117,3 +117,5 @@ room = { id = "androidx.room", version.ref = "room" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
 androidDynamicFeature = { id = "com.android.dynamic-feature", version.ref = "agp" }
 mapsplatform-secrets-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secretsPlugin"}
+
+myactivitytracker-android-application = { id = "myactivitytracker.android.application", version = "unspecified" }
