@@ -1,11 +1,28 @@
 plugins {
     alias(libs.plugins.myactivitytracker.android.application.compose)
-    alias(libs.plugins.mapsplatform.secrets.plugin)
     alias(libs.plugins.myactivitytracker.jvm.ktor)
+    alias(libs.plugins.mapsplatform.secrets.plugin)
 }
 
 android {
     namespace = "com.tomiappdevelopment.myactivitytracker"
+
+
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+
+        multiDexEnabled = true
+
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
 }
 
 dependencies {
@@ -47,6 +64,9 @@ dependencies {
 
     // Timber
     implementation(libs.timber)
+
+    //koin
+    implementation(libs.bundles.koin)
 
     implementation(projects.core.presentation.designsystem)
     implementation(projects.core.presentation.ui)
