@@ -13,12 +13,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.tomiappdevelopment.core.presentation.designsystem.MyActivityTrackerTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel by viewModel<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                viewModel.state.isCheckingAuth
+            }
+        }
         enableEdgeToEdge()
         setContent {
             MyActivityTrackerTheme {
@@ -26,8 +36,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val navController = rememberNavController()
-                    NavigationRoot(navController = navController)
+                    if(!viewModel.state.isCheckingAuth) {
+                        val navController = rememberNavController()
+                        NavigationRoot(
+                            navController = navController,
+                            isLoggedIn = viewModel.state.isLoggedIn
+                        )
+                    }
                 }
             }
         }

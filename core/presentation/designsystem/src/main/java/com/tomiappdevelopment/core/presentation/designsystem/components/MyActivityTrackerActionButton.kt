@@ -24,7 +24,7 @@ import com.tomiappdevelopment.core.presentation.designsystem.RuniqueBlack
 import com.tomiappdevelopment.core.presentation.designsystem.RuniqueGray
 
 @Composable
-fun MyActivityActionButton(
+fun MyActivityTrackerActionButton(
     text: String,
     isLoading: Boolean,
     modifier: Modifier = Modifier,

@@ -1,5 +1,6 @@
 package com.tomiappdevelopment.auth.presentation.register
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
@@ -39,10 +40,9 @@ import com.tomiappdevelopment.core.presentation.designsystem.EmailIcon
 import com.tomiappdevelopment.core.presentation.designsystem.MyActivityTrackerTheme
 import com.tomiappdevelopment.core.presentation.designsystem.Poppins
 import com.tomiappdevelopment.core.presentation.designsystem.RuniqueDarkRed
-import com.tomiappdevelopment.core.presentation.designsystem.RuniqueGray
 import com.tomiappdevelopment.core.presentation.designsystem.RuniqueGreen
 import com.tomiappdevelopment.core.presentation.designsystem.components.GradientBackground
-import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityActionButton
+import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerActionButton
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerPasswordTextField
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerTextField
 import com.tomiappdevelopment.presentation.ui.ObserveAsEvents
@@ -80,7 +80,8 @@ fun RegisterScreenRoot(
 
     RegisterScreen(
         state = viewModel.state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        onSignInClick=onSignInClick
     )
 }
 
@@ -88,7 +89,8 @@ fun RegisterScreenRoot(
 @Composable
 private fun RegisterScreen(
     state: RegisterState,
-    onAction: (RegisterAction) -> Unit
+    onAction: (RegisterAction) -> Unit,
+    onSignInClick: ()->Unit
 ) {
     GradientBackground {
         Column(
@@ -107,7 +109,7 @@ private fun RegisterScreen(
                 withStyle(
                     style = SpanStyle(
                         fontFamily = Poppins,
-                        color = RuniqueGray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 ) {
                     append(stringResource(id = R.string.already_have_an_account) + " ")
@@ -115,16 +117,16 @@ private fun RegisterScreen(
                         tag = "clickable_text",
                         annotation = stringResource(id = R.string.login)
                     )
-                    withStyle(
-                        style = SpanStyle(
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontFamily = Poppins
-                        )
-                    ) {
-                        append(stringResource(id = R.string.login))
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontFamily = Poppins
+                            )
+                        ) {
+                            append(stringResource(id = R.string.login))
+                        }
                     }
-                }
             }
             ClickableText(
                 text = annotatedString,
@@ -134,7 +136,7 @@ private fun RegisterScreen(
                         start = offset,
                         end = offset
                     ).firstOrNull()?.let {
-                        onAction(RegisterAction.OnLoginClick)
+                        onSignInClick()
                     }
                 }
             )
@@ -193,7 +195,7 @@ private fun RegisterScreen(
                 isValid = state.passwordValidationState.hasUpperCaseCharacter
             )
             Spacer(modifier = Modifier.height(32.dp))
-            MyActivityActionButton(
+            MyActivityTrackerActionButton(
                 text = stringResource(id = R.string.register),
                 isLoading = state.isRegistering,
                 enabled = state.canRegister,
@@ -244,7 +246,8 @@ private fun RegisterScreenPreview() {
                     hasNumber = true,
                 )
             ),
-            onAction = {}
+            onAction = {},
+            onSignInClick = {}
         )
     }
 }
