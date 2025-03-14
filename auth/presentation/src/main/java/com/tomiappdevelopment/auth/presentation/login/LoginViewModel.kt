@@ -39,6 +39,7 @@ class LoginViewModel(
                 canLogin = userDataValidator.isValidEmail(
                     email = email.toString().trim()
                 ) && password.isNotEmpty()
+
             )
         }.launchIn(viewModelScope)
     }

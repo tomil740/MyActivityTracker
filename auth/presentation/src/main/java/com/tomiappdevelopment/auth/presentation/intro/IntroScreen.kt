@@ -22,7 +22,7 @@ import com.tomiappdevelopment.core.presentation.designsystem.LogoIcon
 import com.tomiappdevelopment.core.presentation.designsystem.MyActivityTrackerTheme
 import com.tomiappdevelopment.core.presentation.designsystem.components.GradientBackground
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerActionButton
-import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityOutlinedActionButton
+import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerOutlinedActionButton
 
 @Composable
 fun IntroScreenRoot(
@@ -69,7 +69,7 @@ fun IntroScreen(
                 style = MaterialTheme.typography.bodySmall
             )
             Spacer(modifier = Modifier.height(32.dp))
-            MyActivityOutlinedActionButton(
+            MyActivityTrackerOutlinedActionButton(
                 text = stringResource(id = R.string.sign_in),
                 isLoading = false,
                 onClick = {

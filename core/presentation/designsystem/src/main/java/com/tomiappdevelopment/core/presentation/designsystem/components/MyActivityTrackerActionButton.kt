@@ -68,7 +68,7 @@ fun MyActivityTrackerActionButton(
 }
 
 @Composable
-fun MyActivityOutlinedActionButton(
+fun MyActivityTrackerOutlinedActionButton(
     text: String,
     isLoading: Boolean,
     modifier: Modifier = Modifier,

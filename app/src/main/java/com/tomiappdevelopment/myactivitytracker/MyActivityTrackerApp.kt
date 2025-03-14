@@ -5,6 +5,7 @@ import com.tomiappdevelopment.auth.data.di.authDataModule
 import com.tomiappdevelopment.auth.presentation.di.authViewModelModule
 import com.tomiappdevelopment.core.data.di.coreDataModule
 import com.tomiappdevelopment.myactivitytracker.di.appModule
+import com.tomiappdevelopment.run.presentation.di.runViewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -25,7 +26,8 @@ class MyActivityTrackerApp: Application() {
                 authDataModule,
                 authViewModelModule,
                 appModule,
-                coreDataModule
+                coreDataModule,
+                runViewModelModule
             )
         }
     }

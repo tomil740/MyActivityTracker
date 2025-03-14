@@ -133,7 +133,7 @@ private fun LoginScreen(
             MyActivityTrackerActionButton(
                 text = stringResource(id = R.string.login),
                 isLoading = state.isLoggingIn,
-                enabled = state.canLogin && state.isLoggingIn,
+                enabled = state.canLogin && (!state.isLoggingIn),
                 onClick = {
                     onAction(LoginAction.OnLoginClick)
                 },
