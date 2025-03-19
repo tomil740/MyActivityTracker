@@ -21,6 +21,7 @@ val DarkColorScheme = darkColorScheme(
     onPrimary = RuniqueBlack,
     onBackground = RuniqueWhite,
     onSurface = RuniqueWhite,
+    errorContainer = RuniqueDarkRed5,
     onSurfaceVariant = RuniqueGray
 )
 

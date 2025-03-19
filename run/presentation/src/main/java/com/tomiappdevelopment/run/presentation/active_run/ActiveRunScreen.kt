@@ -4,6 +4,10 @@ package com.tomiappdevelopment.run.presentation.active_run
 import android.Manifest
 import android.content.Context
 import android.os.Build
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,10 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.tomiappdevelopment.core.presentation.designsystem.MyActivityTrackerTheme
 import com.tomiappdevelopment.core.presentation.designsystem.StartIcon
 import com.tomiappdevelopment.core.presentation.designsystem.StopIcon
+import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerActionButton
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerDialog
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerFloatingActionButton
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerOutlinedActionButton
@@ -32,6 +33,8 @@ import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivi
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerToolbar
 import com.tomiappdevelopment.run.presentation.R
 import com.tomiappdevelopment.run.presentation.active_run.components.RunDataCard
+import com.tomiappdevelopment.run.presentation.active_run.maps.TrackerMap
+import com.tomiappdevelopment.run.presentation.active_run.service.ActiveRunService
 import com.tomiappdevelopment.run.presentation.util.hasLocationPermission
 import com.tomiappdevelopment.run.presentation.util.hasNotificationPermission
 import com.tomiappdevelopment.run.presentation.util.shouldShowLocationPermissionRationale
@@ -40,10 +43,12 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ActiveRunScreenRoot(
+    onServiceToggle: (isServiceRunning: Boolean) -> Unit,
     viewModel: ActiveRunViewModel = koinViewModel(),
 ) {
     ActiveRunScreen(
         state = viewModel.state,
+        onServiceToggle = onServiceToggle,
         onAction = viewModel::onAction
     )
 }
@@ -52,6 +57,7 @@ fun ActiveRunScreenRoot(
 @Composable
 private fun ActiveRunScreen(
     state: ActiveRunState,
+    onServiceToggle: (isServiceRunning: Boolean) -> Unit,
     onAction: (ActiveRunAction) -> Unit
 ) {
     val context = LocalContext.current
@@ -105,6 +111,19 @@ private fun ActiveRunScreen(
         }
     }
 
+    LaunchedEffect(key1 = state.isRunFinished) {
+        if(state.isRunFinished) {
+            onServiceToggle(false)
+        }
+    }
+
+    LaunchedEffect(key1 = state.shouldTrack) {
+        if(context.hasLocationPermission() && state.shouldTrack && !ActiveRunService.isServiceActive) {
+            onServiceToggle(true)
+        }
+    }
+
+
     MyActivityTrackerScaffold(
         withGradient = false,
         topAppBar = {
@@ -140,6 +159,16 @@ private fun ActiveRunScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface)
         ) {
+
+            TrackerMap(
+                isRunFinished = state.isRunFinished,
+                currentLocation = state.currentLocation,
+                locations = state.runData.locations,
+                onSnapshot = {},
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+
             RunDataCard(
                 elapsedTime = state.elapsedTime,
                 runData = state.runData,
@@ -149,6 +178,36 @@ private fun ActiveRunScreen(
                     .fillMaxWidth()
             )
         }
+    }
+
+    if (!state.shouldTrack && state.hasStartedRunning) {
+        MyActivityTrackerDialog(
+            title = stringResource(id = R.string.running_is_paused),
+            onDismiss = {
+                onAction(ActiveRunAction.OnResumeRunClick)
+            },
+            description = stringResource(id = R.string.resume_or_finish_run),
+            primaryButton = {
+                MyActivityTrackerActionButton(
+                    text = stringResource(id = R.string.resume),
+                    isLoading = false,
+                    onClick = {
+                        onAction(ActiveRunAction.OnResumeRunClick)
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            },
+            secondaryButton = {
+                MyActivityTrackerOutlinedActionButton(
+                    text = stringResource(id = R.string.finish),
+                    isLoading = state.isSavingRun,
+                    onClick = {
+                        onAction(ActiveRunAction.OnFinishRunClick)
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        )
     }
 
     if (state.showLocationRationale || state.showNotificationRationale) {
@@ -209,6 +268,7 @@ private fun ActiveRunScreenPreview() {
     MyActivityTrackerTheme {
         ActiveRunScreen(
             state = ActiveRunState(),
+            onServiceToggle = {},
             onAction = {}
         )
     }
