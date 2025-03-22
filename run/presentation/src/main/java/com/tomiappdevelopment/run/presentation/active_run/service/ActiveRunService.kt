@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import androidx.core.content.getSystemService
@@ -45,6 +46,8 @@ class ActiveRunService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i("hay","start form service")
+
         when(intent?.action) {
             ACTION_START -> {
                 val activityClass = intent.getStringExtra(EXTRA_ACTIVITY_CLASS)
@@ -57,6 +60,7 @@ class ActiveRunService: Service() {
     }
 
     private fun start(activityClass: Class<*>) {
+        Log.i("hay","start form service start!!!!!!")
         if(!isServiceActive) {
             isServiceActive = true
             createNotificationChannel()
@@ -118,6 +122,7 @@ class ActiveRunService: Service() {
         private const val EXTRA_ACTIVITY_CLASS = "EXTRA_ACTIVITY_CLASS"
 
         fun createStartIntent(context: Context, activityClass: Class<*>): Intent {
+            Log.i("hay","start form service")
             return Intent(context, ActiveRunService::class.java).apply {
                 action = ACTION_START
                 putExtra(EXTRA_ACTIVITY_CLASS, activityClass.name)

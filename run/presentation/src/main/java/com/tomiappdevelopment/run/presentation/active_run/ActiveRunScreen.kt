@@ -3,7 +3,10 @@ package com.tomiappdevelopment.run.presentation.active_run
 
 import android.Manifest
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -31,6 +34,7 @@ import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivi
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerOutlinedActionButton
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerScaffold
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerToolbar
+import com.tomiappdevelopment.presentation.ui.ObserveAsEvents
 import com.tomiappdevelopment.run.presentation.R
 import com.tomiappdevelopment.run.presentation.active_run.components.RunDataCard
 import com.tomiappdevelopment.run.presentation.active_run.maps.TrackerMap
@@ -40,16 +44,44 @@ import com.tomiappdevelopment.run.presentation.util.hasNotificationPermission
 import com.tomiappdevelopment.run.presentation.util.shouldShowLocationPermissionRationale
 import com.tomiappdevelopment.run.presentation.util.shouldShowNotificationPermissionRationale
 import org.koin.androidx.compose.koinViewModel
+import java.io.ByteArrayOutputStream
 
 @Composable
 fun ActiveRunScreenRoot(
+    onFinish: () -> Unit,
+    onBack: () -> Unit,
     onServiceToggle: (isServiceRunning: Boolean) -> Unit,
     viewModel: ActiveRunViewModel = koinViewModel(),
+
 ) {
+    val context = LocalContext.current
+    ObserveAsEvents(flow = viewModel.events) { event ->
+        when(event) {
+            is ActiveRunEvent.Error -> {
+                Toast.makeText(
+                    context,
+                    event.error.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            ActiveRunEvent.RunSaved -> onFinish()
+        }
+    }
+
     ActiveRunScreen(
         state = viewModel.state,
         onServiceToggle = onServiceToggle,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when(action) {
+                is ActiveRunAction.OnBackClick -> {
+                    if(!viewModel.state.hasStartedRunning) {
+                        onBack()
+                    }
+                }
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
@@ -118,8 +150,11 @@ private fun ActiveRunScreen(
     }
 
     LaunchedEffect(key1 = state.shouldTrack) {
+        Log.i("hay","${ActiveRunService.isServiceActive}")
         if(context.hasLocationPermission() && state.shouldTrack && !ActiveRunService.isServiceActive) {
+            Log.i("hay","toggle?")
             onServiceToggle(true)
+            Log.i("hay","toggle? ${ActiveRunService.isServiceActive}")
         }
     }
 
@@ -164,7 +199,17 @@ private fun ActiveRunScreen(
                 isRunFinished = state.isRunFinished,
                 currentLocation = state.currentLocation,
                 locations = state.runData.locations,
-                onSnapshot = {},
+                onSnapshot = { bmp ->
+                    val stream = ByteArrayOutputStream()
+                    stream.use {
+                        bmp.compress(
+                            Bitmap.CompressFormat.JPEG,
+                            80,
+                            it
+                        )
+                    }
+                    onAction(ActiveRunAction.OnRunProcessed(stream.toByteArray()))
+                },
                 modifier = Modifier
                     .fillMaxSize()
             )

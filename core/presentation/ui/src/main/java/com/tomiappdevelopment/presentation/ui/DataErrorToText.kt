@@ -3,7 +3,6 @@ package com.tomiappdevelopment.presentation.ui
 import com.tomiappdevelopment.core.domain.util.DataError
 import com.tomiappdevelopment.ui.R
 
-
 fun DataError.asUiText(): UiText {
     return when(this) {
         DataError.Local.DISK_FULL -> UiText.StringResource(

@@ -1,5 +1,6 @@
 package com.tomiappdevelopment.myactivitytracker
 
+import android.util.Log
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -95,6 +96,7 @@ private fun NavGraphBuilder.runGraph(navController: NavHostController) {
                 onStartRunClick = {
                     navController.navigate("active_run")
                 }
+
             )
         }
         composable(
@@ -107,8 +109,15 @@ private fun NavGraphBuilder.runGraph(navController: NavHostController) {
         ) {
             val context = LocalContext.current
             ActiveRunScreenRoot(
+                onBack = {
+                    navController.navigateUp()
+                },
+                onFinish = {
+                    navController.navigateUp()
+                },
                 onServiceToggle = { shouldServiceRun ->
                     if (shouldServiceRun) {
+                        Log.i("hay","start an intent")
                         context.startService(
                             ActiveRunService.createStartIntent(
                                 context = context,

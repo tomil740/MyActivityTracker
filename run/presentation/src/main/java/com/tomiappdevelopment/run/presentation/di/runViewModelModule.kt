@@ -1,5 +1,6 @@
 package com.tomiappdevelopment.run.presentation.di
 
+import com.tomiappdevelopment.core.domain.run.SyncRunScheduler
 import com.tomiappdevelopment.run.presentation.active_run.ActiveRunViewModel
 import com.tomiappdevelopment.run.presentation.run_overview.RunOverviewViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
