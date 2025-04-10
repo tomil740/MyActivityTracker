@@ -95,7 +95,8 @@ private fun NavGraphBuilder.runGraph(navController: NavHostController) {
             RunOverviewScreenRoot(
                 onStartRunClick = {
                     navController.navigate("active_run")
-                }
+                },
+                onLogoutClick = {}
 
             )
         }
