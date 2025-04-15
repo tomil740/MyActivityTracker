@@ -118,7 +118,6 @@ private fun NavGraphBuilder.runGraph(navController: NavHostController) {
                 },
                 onServiceToggle = { shouldServiceRun ->
                     if (shouldServiceRun) {
-                        Log.i("hay","start an intent")
                         context.startService(
                             ActiveRunService.createStartIntent(
                                 context = context,
