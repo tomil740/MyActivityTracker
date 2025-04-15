@@ -1,4 +1,4 @@
-package com.tomiappdevelopment.run.presentation.run_overview.components
+package com.tomiappdevelopment.goalstracker.presentation.core.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -21,8 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -48,25 +45,25 @@ import com.tomiappdevelopment.core.domain.run.Run
 import com.tomiappdevelopment.core.presentation.designsystem.CalendarIcon
 import com.tomiappdevelopment.core.presentation.designsystem.MyActivityTrackerTheme
 import com.tomiappdevelopment.core.presentation.designsystem.RunOutlinedIcon
-import com.tomiappdevelopment.run.presentation.R
-import com.tomiappdevelopment.run.presentation.run_overview.mapper.toRunUi
-import com.tomiappdevelopment.run.presentation.run_overview.model.RunDataUi
-import com.tomiappdevelopment.run.presentation.run_overview.model.RunUi
+import com.tomiappdevelopment.goalstracker.domain.modules.ActivityGoalsData
 import java.time.ZonedDateTime
 import kotlin.math.max
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
+import com.tomiappdevelopment.goalstracker.presentation.R
+import com.tomiappdevelopment.presentation.ui.formatted
+import com.tomiappdevelopment.presentation.ui.toFormattedDateTime
+import com.tomiappdevelopment.presentation.ui.toFormattedKm
+import com.tomiappdevelopment.presentation.ui.toFormattedKmh
+
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RunListItem(
-    runUi: RunUi,
-    onDeleteClick: () -> Unit,
+fun ActivityListItem(
+    activityGoalsData: ActivityGoalsData,
     modifier: Modifier = Modifier
 ) {
-    var showDropDown by remember {
-        mutableStateOf(false)
-    }
     Box {
         Column(
             modifier = modifier
@@ -74,39 +71,22 @@ fun RunListItem(
                 .background(MaterialTheme.colorScheme.surface)
                 .combinedClickable(
                     onClick = {},
-                    onLongClick = {
-                        showDropDown = true
-                    }
                 )
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            MapImage(imageUrl = runUi.mapPictureUrl)
+            MapImage(imageUrl = activityGoalsData.mapPictureUrl)
             RunningTimeSection(
-                duration = runUi.duration,
+                duration = activityGoalsData.duration.formatted(),
                 modifier = Modifier.fillMaxWidth()
             )
             HorizontalDivider(
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
             )
-            RunningDateSection(dateTime = runUi.dateTime)
+            RunningDateSection(dateTime = activityGoalsData.dateTime.toFormattedDateTime())
             DataGrid(
-                run = runUi,
+                activityGoalsData = activityGoalsData,
                 modifier = Modifier.fillMaxWidth()
-            )
-        }
-        DropdownMenu(
-            expanded = showDropDown,
-            onDismissRequest = { showDropDown = false }
-        ) {
-            DropdownMenuItem(
-                text = {
-                    Text(text = stringResource(id = R.string.delete))
-                },
-                onClick = {
-                    showDropDown = false
-                    onDeleteClick()
-                }
             )
         }
     }
@@ -119,7 +99,7 @@ private fun MapImage(
 ) {
     SubcomposeAsyncImage(
         model = imageUrl,
-        contentDescription = stringResource(id = R.string.run_map),
+        contentDescription = stringResource(id =R.string.run_map),
         modifier = modifier
             .fillMaxWidth()
             .aspectRatio(16 / 9f)
@@ -224,29 +204,17 @@ private fun RunningDateSection(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun DataGrid(
-    run: RunUi,
+    activityGoalsData: ActivityGoalsData,
     modifier: Modifier = Modifier
 ) {
     val runDataUiList = listOf(
-        RunDataUi(
+        ActivityDataUi(
             name = stringResource(id = R.string.distance),
-            value = run.distance
+            value = activityGoalsData.distance.toFormattedKm()
         ),
-        RunDataUi(
-            name = stringResource(id = R.string.pace),
-            value = run.pace
-        ),
-        RunDataUi(
-            name = stringResource(id = R.string.avg_speed),
-            value = run.avgSpeed
-        ),
-        RunDataUi(
-            name = stringResource(id = R.string.max_speed),
-            value = run.maxSpeed
-        ),
-        RunDataUi(
-            name = stringResource(id = R.string.total_elevation),
-            value = run.totalElevation
+        ActivityDataUi(
+            name = stringResource(id = R.string.duration),
+            value = activityGoalsData.duration.toString()
         ),
     )
     var maxWidth by remember {
@@ -260,7 +228,7 @@ private fun DataGrid(
     ) {
         runDataUiList.forEach { run ->
             DataGridCell(
-                runData = run,
+                activityDataUi = run,
                 modifier = Modifier
                     .defaultMinSize(minWidth = maxWidthDp)
                     .onSizeChanged {
@@ -273,42 +241,44 @@ private fun DataGrid(
 
 @Composable
 private fun DataGridCell(
-    runData: RunDataUi,
+    activityDataUi: ActivityDataUi,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
     ) {
         Text(
-            text = runData.name,
+            text = activityDataUi.name,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 12.sp
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = runData.value,
+            text = activityDataUi.value,
             color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
+
+data class ActivityDataUi(
+    val name: String,
+    val value: String
+)
 
 
 @Preview
 @Composable
 private fun RunListItemPreview() {
     MyActivityTrackerTheme {
-        RunListItem(
-            runUi = Run(
+        ActivityListItem(
+            activityGoalsData = ActivityGoalsData(
                 id = "123",
                 duration = 10.minutes + 30.seconds,
-                dateTimeUtc = ZonedDateTime.now(),
-                distanceMeters = 2543,
-                location = Location(0.0, 0.0),
-                maxSpeedKmh = 15.6234,
-                totalElevationMeters = 123,
+                dateTime = ZonedDateTime.now(),
+                distance = 55.5,
                 mapPictureUrl = null
-            ).toRunUi(),
-            onDeleteClick = { /*TODO*/ }
+            )
         )
     }
 }
+

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="runique">Runique</string>
+    <string name="analytics">Analytics</string>
+    <string name="logout">Logout</string>
+
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
 

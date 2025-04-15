@@ -66,16 +66,16 @@ private fun RunOverviewScreen(
         topAppBar = {
             MyActivityTrackerToolbar(
                 showBackButton = false,
-                title = stringResource(id = R.string.runique),
+                title = stringResource(id = com.tomiappdevelopment.core.presentation.designsystem.R.string.runique),
                 scrollBehavior = scrollBehavior,
                 menuItems = listOf(
                     DropDownItem(
                         icon = AnalyticsIcon,
-                        title = stringResource(id = R.string.analytics)
+                        title = stringResource(id = com.tomiappdevelopment.core.presentation.designsystem.R.string.analytics)
                     ),
                     DropDownItem(
                         icon = LogoutIcon,
-                        title = stringResource(id = R.string.logout)
+                        title = stringResource(id = com.tomiappdevelopment.core.presentation.designsystem.R.string.logout)
                     ),
                 ),
                 onMenuItemClick = { index ->

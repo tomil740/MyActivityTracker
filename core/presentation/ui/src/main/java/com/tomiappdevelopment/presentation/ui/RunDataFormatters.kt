@@ -2,6 +2,8 @@ package com.tomiappdevelopment.presentation.ui
 
 
 import android.annotation.SuppressLint
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.pow
 import kotlin.math.round
 import kotlin.math.roundToInt
@@ -45,3 +47,7 @@ private fun Double.roundToDecimals(decimalCount: Int): Double {
     val factor = 10f.pow(decimalCount)
     return round(this * factor) / factor
 }
+
+// Time.kt
+fun ZonedDateTime.toFormattedDateTime(): String =
+    DateTimeFormatter.ofPattern("MMM dd, yyyy - hh:mma").format(this)
