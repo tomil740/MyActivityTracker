@@ -35,3 +35,7 @@ include(":run:domain")
 include(":run:presentation")
 include(":run:location")
 include(":run:network")
+include(":goalstracker:data")
+include(":goalstracker:domain")
+include(":goalstracker:presentation")
+
