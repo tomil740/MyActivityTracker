@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tomiappdevelopment.core.domain.SessionStorage
-import com.tomiappdevelopment.core.domain.run.RunRepository
+import com.tomiappdevelopment.core.domain.run.ActivitiesRepository
 import com.tomiappdevelopment.core.domain.run.SyncRunScheduler
 import com.tomiappdevelopment.run.presentation.run_overview.mapper.toRunUi
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.minutes
 
 class RunOverviewViewModel(
-    private val runRepository: RunRepository,
+    private val activitiesRepository: ActivitiesRepository,
     private val syncRunScheduler: SyncRunScheduler,
     private val applicationScope: CoroutineScope,
     private val sessionStorage: SessionStorage
@@ -32,14 +32,14 @@ class RunOverviewViewModel(
             )
         }
 
-        runRepository.getRuns().onEach { runs ->
+        activitiesRepository.getRuns().onEach { runs ->
             val runsUi = runs.map { it.toRunUi() }
             state = state.copy(runs = runsUi)
         }.launchIn(viewModelScope)
 
         viewModelScope.launch {
-            runRepository.syncPendingRuns()
-            runRepository.fetchRuns()
+            activitiesRepository.syncPendingRuns()
+            activitiesRepository.fetchRuns()
         }
     }
 
@@ -48,7 +48,7 @@ class RunOverviewViewModel(
             RunOverviewAction.OnLogoutClick -> logout()
             is RunOverviewAction.DeleteRun -> {
                 viewModelScope.launch {
-                    runRepository.deleteRun(action.runUi.id)
+                    activitiesRepository.deleteRun(action.runUi.id)
                 }
             }
             else -> Unit
@@ -58,8 +58,8 @@ class RunOverviewViewModel(
     private fun logout() {
         applicationScope.launch {
             syncRunScheduler.cancelAllSyncs()
-            runRepository.deleteAllRuns()
-            runRepository.logout()
+            activitiesRepository.deleteAllRuns()
+            activitiesRepository.logout()
             sessionStorage.set(null)
         }
     }

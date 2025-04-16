@@ -20,6 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -45,8 +47,9 @@ fun HomeScreenRoot(
     onLogoutClick: () -> Unit,
     viewModel: HomeScreenViewModel = koinViewModel(),
 ) {
+    val state by viewModel.uiState.collectAsState()
     HomeScreen(
-        state = viewModel.state,
+        state = state,
         onAction = { action ->
             when(action) {
                 HomeScreenEvents.OnLogoutClick -> onLogoutClick()
@@ -114,12 +117,13 @@ fun HomeScreen(
         Column(modifier = modifier.padding(paddingVal)) {
             WeekOverview(
                 workouts = Pair(state.weekState.quantity.toFloat(),state.weeklyTargets.quantity.toFloat()),
-                distance = Pair(state.weekState.distance.toFloat(),state.weeklyTargets.distance.toFloat())
+                distance = Pair(state.weekState.distance.toFloat(),state.weeklyTargets.distance.toFloat()),
+                onSetGoalsClick = {}
             )
 
             MotivationPlate(
-                message = "very good , keep it up!",
-                grade = 9,
+                message = state.statusSentence,
+                grade = state.performanceScore,
                 modifier = modifier
             )
 

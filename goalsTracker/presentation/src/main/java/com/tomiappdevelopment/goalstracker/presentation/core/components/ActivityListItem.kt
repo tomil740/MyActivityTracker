@@ -41,11 +41,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.tomiappdevelopment.core.domain.location.Location
+import com.tomiappdevelopment.core.domain.modules.ActivityGoalsData
 import com.tomiappdevelopment.core.domain.run.Run
 import com.tomiappdevelopment.core.presentation.designsystem.CalendarIcon
 import com.tomiappdevelopment.core.presentation.designsystem.MyActivityTrackerTheme
 import com.tomiappdevelopment.core.presentation.designsystem.RunOutlinedIcon
-import com.tomiappdevelopment.goalstracker.domain.modules.ActivityGoalsData
 import java.time.ZonedDateTime
 import kotlin.math.max
 import kotlin.time.Duration.Companion.minutes
@@ -210,7 +210,7 @@ private fun DataGrid(
     val runDataUiList = listOf(
         ActivityDataUi(
             name = stringResource(id = R.string.distance),
-            value = activityGoalsData.distance.toFormattedKm()
+            value = activityGoalsData.distance.toDouble().toFormattedKm()
         ),
         ActivityDataUi(
             name = stringResource(id = R.string.duration),
@@ -275,7 +275,7 @@ private fun RunListItemPreview() {
                 id = "123",
                 duration = 10.minutes + 30.seconds,
                 dateTime = ZonedDateTime.now(),
-                distance = 55.5,
+                distance = 55.5f,
                 mapPictureUrl = null
             )
         )

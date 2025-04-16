@@ -1,6 +1,7 @@
 package com.tomiappdevelopment.goalstracker.presentation.core.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,7 +27,8 @@ import androidx.compose.ui.unit.dp
 fun WeekOverview(
     workouts: Pair<Float, Float>,
     distance: Pair<Float, Float>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSetGoalsClick: () -> Unit
 ) {
     Surface(
         modifier = modifier
@@ -32,61 +38,73 @@ fun WeekOverview(
         tonalElevation = 2.dp,
         color = MaterialTheme.colorScheme.surface
     ) {
-        Row(
-            modifier = Modifier
-                .padding(24.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            // Left text column
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+        Box(modifier = modifier.fillMaxWidth()) {
+
+            IconButton(
+                onClick = onSetGoalsClick,
+                modifier = Modifier.align(Alignment.TopEnd)
             ) {
-                // Workouts
-                Text(
-                    text = "Workouts",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "${workouts.first.toInt()} / ${workouts.second.toInt()}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Distance
-                Text(
-                    text = "Distance",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "${"%.1f".format(distance.first)} km / ${"%.1f".format(distance.second)} km",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.secondary
+                Icon(
+                    imageVector = Icons.Default.Edit, // or Icons.Default.Settings
+                    contentDescription = "Set Goals",
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
 
-            // Right side rings
-            ProgressRings(
-                progress1 = workouts,
-                progress2 = distance,
+            Row(
                 modifier = Modifier
-                    .padding(start = 16.dp)
-                    .size(120.dp)
-            )
+                    .padding(start = 24.dp, top = 48.dp, end = 24.dp, bottom = 24.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = "Workouts",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = "${workouts.first.toInt()} / ${workouts.second.toInt()}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Distance",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = "${"%.1f".format(distance.first)} km / ${"%.1f".format(distance.second)} km",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
+
+                ProgressRings(
+                    progress1 = workouts,
+                    progress2 = distance,
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .size(120.dp)
+                )
+            }
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun WeekOverviewPreview() {
     MaterialTheme {
         WeekOverview(
             workouts = 4f to 5f,
-            distance = 12.5f to 20f
+            distance = 12.5f to 20f,
+            onSetGoalsClick = {}
         )
     }
 }

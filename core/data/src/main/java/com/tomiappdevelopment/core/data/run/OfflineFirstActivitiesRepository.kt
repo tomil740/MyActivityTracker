@@ -6,7 +6,7 @@ import com.tomiappdevelopment.core.domain.run.LocalRunDataSource
 import com.tomiappdevelopment.core.domain.run.RemoteRunDataSource
 import com.tomiappdevelopment.core.domain.run.Run
 import com.tomiappdevelopment.core.domain.run.RunId
-import com.tomiappdevelopment.core.domain.run.RunRepository
+import com.tomiappdevelopment.core.domain.run.ActivitiesRepository
 import com.tomiappdevelopment.core.domain.util.DataError
 import com.tomiappdevelopment.core.domain.util.EmptyResult
 import io.ktor.client.HttpClient
@@ -18,17 +18,18 @@ import kotlinx.coroutines.flow.Flow
 import com.tomiappdevelopment.core.database.dao.RunPendingSyncDao
 import com.tomiappdevelopment.core.database.mappers.toRun
 import com.tomiappdevelopment.core.domain.SessionStorage
+import com.tomiappdevelopment.core.domain.modules.ActivityGoalsData
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.tomiappdevelopment.core.database.mappers.toRun
 import com.tomiappdevelopment.core.domain.run.SyncRunScheduler
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 import io.ktor.client.plugins.plugin
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.map
 
-class OfflineFirstRunRepository(
+class OfflineFirstActivitiesRepository(
     private val localRunDataSource: LocalRunDataSource,
     private val remoteRunDataSource: RemoteRunDataSource,
     private val applicationScope: CoroutineScope,
@@ -36,7 +37,21 @@ class OfflineFirstRunRepository(
     private val sessionStorage: SessionStorage,
     private val syncRunScheduler: SyncRunScheduler,
     private val client: HttpClient
-): RunRepository {
+): ActivitiesRepository {
+    override fun getWeekActivities(): Flow<List<ActivityGoalsData>> {
+        return localRunDataSource.getWeekActivities()
+            .map { runList ->
+                runList.map { runObj ->
+                    ActivityGoalsData(
+                        id = runObj.id ?: "afd",
+                        distance = runObj.distanceMeters.toFloat(),
+                        duration = runObj.duration,
+                        dateTime = runObj.dateTimeUtc,
+                        mapPictureUrl = runObj.mapPictureUrl
+                    )
+                }
+            }
+    }
 
     override fun getRuns(): Flow<List<Run>> {
         return localRunDataSource.getRuns()

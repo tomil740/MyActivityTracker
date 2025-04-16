@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tomiappdevelopment.core.domain.location.Location
 import com.tomiappdevelopment.core.domain.run.Run
-import com.tomiappdevelopment.core.domain.run.RunRepository
+import com.tomiappdevelopment.core.domain.run.ActivitiesRepository
 import com.tomiappdevelopment.run.domain.LocationDataCalculator
 import com.tomiappdevelopment.run.domain.RunningTracker
 import com.tomiappdevelopment.run.presentation.active_run.service.ActiveRunService
@@ -28,7 +28,7 @@ import com.tomiappdevelopment.presentation.ui.asUiText
 
 class ActiveRunViewModel(
     private val runningTracker: RunningTracker,
-    private val runRepository: RunRepository
+    private val activitiesRepository: ActivitiesRepository
 ): ViewModel() {
 
     var state by mutableStateOf(ActiveRunState(
@@ -156,7 +156,7 @@ class ActiveRunViewModel(
             )
 
             // Save run in repository
-            when(val result = runRepository.upsertRun(run, mapPictureBytes)) {
+            when(val result = activitiesRepository.upsertRun(run, mapPictureBytes)) {
                 is Result.Error -> {
                     eventChannel.send(ActiveRunEvent.Error(result.error.asUiText()))
                 }
