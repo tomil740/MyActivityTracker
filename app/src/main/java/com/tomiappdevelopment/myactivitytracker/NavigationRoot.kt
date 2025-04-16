@@ -13,6 +13,7 @@ import androidx.navigation.navigation
 import com.tomiappdevelopment.auth.presentation.intro.IntroScreenRoot
 import com.tomiappdevelopment.auth.presentation.login.LoginScreenRoot
 import com.tomiappdevelopment.auth.presentation.register.RegisterScreenRoot
+import com.tomiappdevelopment.goalstracker.presentation.SetGoalsScreen.SetGoalsScreenRoot
 import com.tomiappdevelopment.goalstracker.presentation.homeScreen.HomeScreenRoot
 import com.tomiappdevelopment.run.presentation.active_run.ActiveRunScreenRoot
 import com.tomiappdevelopment.run.presentation.active_run.service.ActiveRunService
@@ -97,7 +98,26 @@ private fun NavGraphBuilder.runGraph(navController: NavHostController) {
                 onStartRunClick = {
                     navController.navigate("active_run")
                 },
-                onLogoutClick = {}
+                onLogoutClick = {},
+                onSetGoalsClick={
+                    navController.navigate("set_goals")
+                },
+                onAllActivitesClick={
+                    navController.navigate("run_overview")
+                }
+
+            )
+        }
+        composable("set_goals") {
+            SetGoalsScreenRoot(
+                onBack = {
+                    navController.navigateUp()
+                },
+                onStartActivity = {
+                    navController.navigate("active_run")
+                },
+                onLogoutClick = {
+                }
 
             )
         }

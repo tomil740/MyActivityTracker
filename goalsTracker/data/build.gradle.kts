@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.myactivitytracker.android.library)
+    alias(libs.plugins.myactivitytracker.android.room)
+
 }
 android {
     namespace = "com.tomiappdevelopment.goalsTracker.data"
@@ -14,4 +16,10 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.database)
     implementation(projects.run.domain)
+    implementation(libs.bundles.koin)
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
+    implementation(projects.goalstracker.domain)
+
+
 }

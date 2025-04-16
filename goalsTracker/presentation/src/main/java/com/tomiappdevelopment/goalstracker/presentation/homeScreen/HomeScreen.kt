@@ -45,6 +45,8 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeScreenRoot(
     onStartRunClick: () -> Unit,
     onLogoutClick: () -> Unit,
+    onSetGoalsClick:() -> Unit,
+    onAllActivitesClick:()->Unit,
     viewModel: HomeScreenViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -54,6 +56,8 @@ fun HomeScreenRoot(
             when(action) {
                 HomeScreenEvents.OnLogoutClick -> onLogoutClick()
                 HomeScreenEvents.OnStartActivity -> onStartRunClick()
+                HomeScreenEvents.OnSetGoals->onSetGoalsClick()
+                HomeScreenEvents.OnAllActivities->onAllActivitesClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -118,7 +122,7 @@ fun HomeScreen(
             WeekOverview(
                 workouts = Pair(state.weekState.quantity.toFloat(),state.weeklyTargets.quantity.toFloat()),
                 distance = Pair(state.weekState.distance.toFloat(),state.weeklyTargets.distance.toFloat()),
-                onSetGoalsClick = {}
+                onSetGoalsClick = {onAction(HomeScreenEvents.OnSetGoals)}
             )
 
             MotivationPlate(
@@ -145,7 +149,7 @@ fun HomeScreen(
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onBackground
                     )
-                    IconButton(onClick = { /* TODO: Navigate to all activities screen */ }) {
+                    IconButton(onClick = { onAction(HomeScreenEvents.OnAllActivities) }) {
                         Icon(
                             imageVector = Icons.Default.ArrowForward, // or your own icon
                             contentDescription = "See all activities",

@@ -26,4 +26,9 @@
     <string name="max_speed">Max Speed</string>
     <string name="total_elevation">Total Elevation</string>
     <string name="delete">Delete</string>
+
+    <string name="SetGoalsHeader">Set goals</string>
+    <string name="distanceKm">Distance Km:</string>
+    <string name="WorkoutsQuantity">Workouts Quantity:</string>
+    <string name="updateTargets">Update Targets</string>
 </resources>

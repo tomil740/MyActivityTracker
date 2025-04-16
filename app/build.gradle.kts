@@ -85,4 +85,6 @@ dependencies {
     implementation(projects.run.network)
 
     implementation(projects.goalstracker.presentation)
+    implementation(projects.goalstracker.domain)
+    implementation(projects.goalstracker.data)
 }
