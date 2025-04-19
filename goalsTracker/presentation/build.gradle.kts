@@ -13,4 +13,6 @@ dependencies {
 
     implementation(projects.core.domain)
     implementation(projects.goalstracker.domain)
+    implementation(projects.goalstracker.core)
+
 }

@@ -1,4 +1,4 @@
-package com.tomiappdevelopment.goalstracker.presentation.core.components
+package com.tomiappdevelopment.goalstracker.core.uiComponents
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

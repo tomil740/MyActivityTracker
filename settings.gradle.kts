@@ -39,3 +39,4 @@ include(":goalstracker:data")
 include(":goalstracker:domain")
 include(":goalstracker:presentation")
 
+include(":goalstracker:core")

@@ -46,7 +46,6 @@ class ActiveRunService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i("hay","start form service")
 
         when(intent?.action) {
             ACTION_START -> {
@@ -60,7 +59,6 @@ class ActiveRunService: Service() {
     }
 
     private fun start(activityClass: Class<*>) {
-        Log.i("hay","start form service start!!!!!!")
         if(!isServiceActive) {
             isServiceActive = true
             createNotificationChannel()

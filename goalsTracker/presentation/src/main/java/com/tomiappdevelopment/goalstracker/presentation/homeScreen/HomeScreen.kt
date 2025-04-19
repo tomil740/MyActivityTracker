@@ -35,9 +35,9 @@ import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivi
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerScaffold
 import com.tomiappdevelopment.core.presentation.designsystem.components.MyActivityTrackerToolbar
 import com.tomiappdevelopment.core.presentation.designsystem.components.util.DropDownItem
+import com.tomiappdevelopment.goalstracker.core.uiComponents.MotivationPlate
+import com.tomiappdevelopment.goalstracker.core.uiComponents.WeekOverview
 import com.tomiappdevelopment.goalstracker.presentation.core.components.ActivityListItem
-import com.tomiappdevelopment.goalstracker.presentation.core.components.MotivationPlate
-import com.tomiappdevelopment.goalstracker.presentation.core.components.WeekOverview
 import org.koin.androidx.compose.koinViewModel
 
 

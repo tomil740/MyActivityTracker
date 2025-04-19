@@ -1,5 +1,6 @@
 package com.tomiappdevelopment.goalstracker.domain.useCase
 
+
 import com.tomiappdevelopment.core.domain.modules.ActivityGoalsData
 import com.tomiappdevelopment.goalstracker.domain.modules.WeekDataSum
 import com.tomiappdevelopment.goalstracker.domain.modules.WeekProgressFeedback
@@ -84,17 +85,5 @@ class GetWeekSummaryUseCase {
         )
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 

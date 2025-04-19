@@ -29,7 +29,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="runique" android:host="active_run" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="runique" android:host="home_screen" />
+            </intent-filter>
         </activity>
+        <receiver android:name="com.tomiappdevelopment.goalsTracker.data.workers.RemindLaterReceiver"
+            android:exported="true" />
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

@@ -37,6 +37,7 @@
             <option value="$PROJECT_DIR$/core/presentation/designsystem" />
             <option value="$PROJECT_DIR$/core/presentation/ui" />
             <option value="$PROJECT_DIR$/goalstracker" />
+            <option value="$PROJECT_DIR$/goalstracker/core" />
             <option value="$PROJECT_DIR$/goalstracker/data" />
             <option value="$PROJECT_DIR$/goalstracker/domain" />
             <option value="$PROJECT_DIR$/goalstracker/presentation" />
